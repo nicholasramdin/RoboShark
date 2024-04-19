@@ -1,51 +1,106 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyDetection : MonoBehaviour
 {
     public float detectionRange = 10f;
-    public float fieldOfViewAngle = 45f; // This is half of the actual FOV. 45 means a 90-degree FOV.
-    public LayerMask detectionLayer; // Make sure this is set in the Inspector.
+    public float fieldOfViewAngle = 45f; // This is half of the actual FOV.
+    public LayerMask detectionLayer;
+    public float chaseSpeed = 5f;
+    public Material sharkMaterial; // Assign this in the Inspector.
+
+    private Transform target;
+    private bool isChasing;
+    private Color originalColor; // To store the original color
+
+    void Start()
+    {
+        // Cache the original color of the shark's material.
+        if (sharkMaterial != null)
+        {
+            originalColor = sharkMaterial.color;
+        }
+        else
+        {
+            Debug.LogError("Shark material has not been assigned in the inspector.", this);
+        }
+    }
 
     void Update()
     {
-        ScanForPlayer();
+        if (isChasing && target != null)
+        {
+            ChaseTarget();
+        }
+        else
+        {
+            ScanForPlayer();
+        }
     }
 
     void ScanForPlayer()
     {
-        // Find all targets within the detection range and in the specified layer.
-        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, detectionRange, detectionLayer);
-
-        foreach (var target in targetsInViewRadius)
         {
-            Transform targetTransform = target.transform;
-            Vector3 directionToTarget = (targetTransform.position - transform.position).normalized;
+            // Find all targets within the detection range and in the specified layer.
+            Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, detectionRange, detectionLayer);
 
-            // Check if the target is within the field of view
-            if (Vector3.Angle(transform.forward, directionToTarget) < fieldOfViewAngle)
+            foreach (var target in targetsInViewRadius)
             {
-                float distanceToTarget = Vector3.Distance(transform.position, targetTransform.position);
+                Transform targetTransform = target.transform;
+                Vector3 directionToTarget = (targetTransform.position - transform.position).normalized;
 
-                // Raycast to check for line of sight
-                RaycastHit hit;
-                if (Physics.Raycast(transform.position, directionToTarget, out hit, distanceToTarget, detectionLayer))
+                // Check if the target is within the field of view
+                if (Vector3.Angle(transform.forward, directionToTarget) < fieldOfViewAngle)
                 {
-                    if (hit.transform == targetTransform)
+                    float distanceToTarget = Vector3.Distance(transform.position, targetTransform.position);
+
+                    // Raycast to check for line of sight
+                    RaycastHit hit;
+                    if (Physics.Raycast(transform.position, directionToTarget, out hit, distanceToTarget, detectionLayer))
                     {
-                        // Player detected
-                        OnTargetDetected(targetTransform);
+                        if (hit.transform == targetTransform)
+                        {
+                            // Player detected
+                            OnTargetDetected(targetTransform);
+                        }
                     }
                 }
             }
         }
+
     }
 
-    void OnTargetDetected(Transform target)
+    void OnTargetDetected(Transform detectedTarget)
     {
-        // Add logic for when the target is detected, like initiating chase
-        Debug.Log(target.name + " detected!");
-        // Implement the response, such as starting chase behavior.
+        Debug.Log(detectedTarget.name + " detected!");
+        target = detectedTarget;
+        isChasing = true;
+        // Change color to red if the material is assigned
+        if (sharkMaterial != null)
+        {
+            sharkMaterial.color = Color.red;
+        }
+    }
+
+    void ChaseTarget()
+    {
+        // Chase the target
+        Vector3 direction = (target.position - transform.position).normalized;
+        transform.position += direction * chaseSpeed * Time.deltaTime;
+
+        // Look at the target
+        transform.LookAt(target);
+
+        // Check if the player is still in the field of view
+        if (Vector3.Angle(transform.forward, target.position - transform.position) > fieldOfViewAngle)
+        {
+            // Player escaped
+            isChasing = false;
+            target = null;
+            // Reset color to the original color if the material is assigned
+            if (sharkMaterial != null)
+            {
+                sharkMaterial.color = originalColor;
+            }
+        }
     }
 }

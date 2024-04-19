@@ -1,12 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 
 public class RobotSharkController : MonoBehaviour
 {
     public float moveSpeed = 5.0f;
     public float turnSpeed = 60.0f;
+
+    private Rigidbody rb; // Reference to the Rigidbody component
+
+    void Start()
+    {
+        // Get the Rigidbody component
+        rb = GetComponent<Rigidbody>();
+    }
 
     void Update()
     {
@@ -31,16 +36,16 @@ public class RobotSharkController : MonoBehaviour
         // Calculate the desired movement direction in world space
         Vector3 direction = (camRight * horizontal + camForward * vertical + Vector3.up * depth).normalized;
 
-        // Translate the shark in the desired direction
-        transform.Translate(direction * moveSpeed * Time.deltaTime, Space.World);
+        // Move the shark in the desired direction using physics
+        Vector3 move = transform.position + (direction * moveSpeed * Time.deltaTime);
+        rb.MovePosition(move);
 
-        //  rotate the shark to face the direction of movement
+        // Rotate the shark to face the direction of movement using physics
         if (direction != Vector3.zero)
         {
             Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, turnSpeed * Time.deltaTime);
+            Quaternion rotation = Quaternion.RotateTowards(rb.rotation, toRotation, turnSpeed * Time.deltaTime);
+            rb.MoveRotation(rotation);
         }
     }
 }
-
-
