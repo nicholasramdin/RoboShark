@@ -7,16 +7,17 @@ public class PatrolRoute : MonoBehaviour
     public Transform[] waypoints;
     public float patrolSpeed = 2.0f;
     private int currentWaypointIndex = 0;
+    private bool movingForward = true;
 
     private void Update()
     {
-        PatrolBetweenWaypoints();
+        PatrolBackAndForth();
     }
 
-    private void PatrolBetweenWaypoints()
+    private void PatrolBackAndForth()
     {
-        // If no waypoints, return early.
-        if (waypoints.Length == 0) return;
+        // If we have no waypoints, or only one, return early.
+        if (waypoints.Length <= 1) return;
 
         // Move the enemy towards the current waypoint.
         Transform targetWaypoint = waypoints[currentWaypointIndex];
@@ -26,8 +27,35 @@ public class PatrolRoute : MonoBehaviour
         // Check if the enemy has reached the waypoint.
         if (Vector3.Distance(transform.position, targetWaypoint.position) < 0.1f)
         {
-            // Increment the currentWaypointIndex, wrapping back to 0 if necessary.
-            currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
+            if (movingForward)
+            {
+                // Move to the next waypoint.
+                currentWaypointIndex++;
+                // If we've reached the last waypoint, reverse the direction.
+                if (currentWaypointIndex >= waypoints.Length)
+                {
+                    currentWaypointIndex = waypoints.Length - 2;
+                    movingForward = false;
+                }
+            }
+            else
+            {
+                // Move to the previous waypoint.
+                currentWaypointIndex--;
+                // If we've reached the first waypoint, reverse the direction.
+                if (currentWaypointIndex < 0)
+                {
+                    currentWaypointIndex = 1;
+                    movingForward = true;
+                }
+            }
+        }
+
+        // Rotate to face the next waypoint.
+        if (step > 0)
+        {
+            var rotation = Quaternion.LookRotation(targetWaypoint.position - transform.position);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * patrolSpeed);
         }
     }
 }
