@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class RobotSharkController : MonoBehaviour
 {
-    public float moveSpeed = 5.0f;
+    public float moveSpeed = 15f;
     public float turnSpeed = 60.0f;
 
     private Rigidbody rb; // Reference to the Rigidbody component

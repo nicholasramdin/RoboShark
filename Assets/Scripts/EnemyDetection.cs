@@ -6,22 +6,32 @@ public class EnemyDetection : MonoBehaviour
     public float fieldOfViewAngle = 45f; // This is half of the actual FOV.
     public LayerMask detectionLayer;
     public float chaseSpeed = 5f;
-    public Material sharkMaterial; // Assign this in the Inspector.
+    public Material normalMaterial; // Assign the normal shark material in the Inspector.
+    public Material alertMaterial; // Assign the alert (red) material in the Inspector.
 
     private Transform target;
     private bool isChasing;
-    private Color originalColor; // To store the original color
+    private Renderer sharkRenderer; // Renderer component of the shark
+    private PatrolRoute patrolRoute; // Reference to the PatrolRoute script
+
 
     void Start()
     {
-        // Cache the original color of the shark's material.
-        if (sharkMaterial != null)
+        sharkRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        patrolRoute = GetComponent<PatrolRoute>(); // Reference the PatrolRoute script attached to the GameObject
+
+        if (sharkRenderer == null)
         {
-            originalColor = sharkMaterial.color;
+            Debug.LogError("SkinnedMeshRenderer component is not attached to " + gameObject.name, this);
         }
         else
         {
-            Debug.LogError("Shark material has not been assigned in the inspector.", this);
+            sharkRenderer.material = normalMaterial;
+        }
+
+        if (patrolRoute == null)
+        {
+            Debug.LogError("EnemyPatrol script is not attached to " + gameObject.name, this);
         }
     }
 
@@ -30,6 +40,13 @@ public class EnemyDetection : MonoBehaviour
         if (isChasing && target != null)
         {
             ChaseTarget();
+            // Calculate the distance to the target
+            float distanceToTarget = Vector3.Distance(transform.position, target.position);
+            // Check if the target has escaped
+            if (distanceToTarget > detectionRange * 2)
+            {
+                LoseTarget();
+            }
         }
         else
         {
@@ -39,68 +56,72 @@ public class EnemyDetection : MonoBehaviour
 
     void ScanForPlayer()
     {
+        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, detectionRange, detectionLayer);
+        foreach (var targetCollider in targetsInViewRadius)
         {
-            // Find all targets within the detection range and in the specified layer.
-            Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, detectionRange, detectionLayer);
+            Transform potentialTarget = targetCollider.transform;
+            Vector3 directionToTarget = (potentialTarget.position - transform.position).normalized;
 
-            foreach (var target in targetsInViewRadius)
+            if (Vector3.Angle(transform.forward, directionToTarget) < fieldOfViewAngle)
             {
-                Transform targetTransform = target.transform;
-                Vector3 directionToTarget = (targetTransform.position - transform.position).normalized;
-
-                // Check if the target is within the field of view
-                if (Vector3.Angle(transform.forward, directionToTarget) < fieldOfViewAngle)
+                float distanceToTarget = Vector3.Distance(transform.position, potentialTarget.position);
+                RaycastHit hit;
+                if (Physics.Raycast(transform.position, directionToTarget, out hit, distanceToTarget, detectionLayer))
                 {
-                    float distanceToTarget = Vector3.Distance(transform.position, targetTransform.position);
-
-                    // Raycast to check for line of sight
-                    RaycastHit hit;
-                    if (Physics.Raycast(transform.position, directionToTarget, out hit, distanceToTarget, detectionLayer))
+                    if (hit.transform == potentialTarget)
                     {
-                        if (hit.transform == targetTransform)
-                        {
-                            // Player detected
-                            OnTargetDetected(targetTransform);
-                        }
+                        OnTargetDetected(potentialTarget);
                     }
                 }
             }
         }
-
     }
+
 
     void OnTargetDetected(Transform detectedTarget)
     {
         Debug.Log(detectedTarget.name + " detected!");
         target = detectedTarget;
         isChasing = true;
-        // Change color to red if the material is assigned
-        if (sharkMaterial != null)
+        if (sharkRenderer != null && alertMaterial != null)
         {
-            sharkMaterial.color = Color.red;
+            sharkRenderer.material = alertMaterial;
         }
+        // Disable the patrol script to stop patrolling
+        if (patrolRoute != null) patrolRoute.enabled = false;
     }
 
     void ChaseTarget()
     {
-        // Chase the target
         Vector3 direction = (target.position - transform.position).normalized;
         transform.position += direction * chaseSpeed * Time.deltaTime;
-
-        // Look at the target
         transform.LookAt(target);
 
-        // Check if the player is still in the field of view
         if (Vector3.Angle(transform.forward, target.position - transform.position) > fieldOfViewAngle)
         {
-            // Player escaped
             isChasing = false;
             target = null;
-            // Reset color to the original color if the material is assigned
-            if (sharkMaterial != null)
+            // Revert the shark's material to the normal material
+            if (sharkRenderer != null && normalMaterial != null)
             {
-                sharkMaterial.color = originalColor;
+                sharkRenderer.material = normalMaterial;
             }
         }
+    }
+
+
+
+void LoseTarget()
+    {
+        // Call this method when the player escapes
+        Debug.Log("Player escaped, losing target.");
+        isChasing = false;
+        target = null;
+        if (sharkRenderer != null && normalMaterial != null)
+        {
+            sharkRenderer.material = normalMaterial;
+        }
+        // Enable the patrol script to resume patrolling
+        if (patrolRoute != null) patrolRoute.enabled = true;
     }
 }
