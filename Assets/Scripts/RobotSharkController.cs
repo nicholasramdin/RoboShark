@@ -2,50 +2,53 @@ using UnityEngine;
 
 public class RobotSharkController : MonoBehaviour
 {
-    public float moveSpeed = 15f;
-    public float turnSpeed = 60.0f;
-
-    private Rigidbody rb; // Reference to the Rigidbody component
+    public float moveSpeed = 5.0f;
+    private Rigidbody rb;
+    private bool facingRight = true;
 
     void Start()
     {
-        // Get the Rigidbody component
         rb = GetComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezePositionZ;
+        rb.useGravity = false;
     }
 
     void Update()
     {
-        // Get the main camera's transform
+        // Capture the directions relative to the camera's orientation
         Transform camTransform = Camera.main.transform;
 
-        // Get input for movement relative to the camera's orientation
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
-        float depth = Input.GetAxis("Depth");
 
-        // Calculate the movement direction in the camera's local space
-        Vector3 camRight = camTransform.right; // Camera's right vector
-        Vector3 camForward = camTransform.forward; // Camera's forward vector
-        camForward.y = 0; // Ignore camera's vertical component to keep movement horizontal
-        camRight.y = 0; // Ignore camera's vertical component for horizontal movement
+        // Calculate the movement direction relative to camera's orientation
+        Vector3 camRight = camTransform.right;
+        Vector3 camForward = camTransform.up; // Using up vector to move in the camera's up/down direction
 
-        // Normalize vectors to ensure their length is 1
-        camForward.Normalize();
+        // Remove any influence from the camera's vertical (z-axis) tilt
+        camRight.z = 0;
+        camForward.z = 0;
         camRight.Normalize();
+        camForward.Normalize();
 
         // Calculate the desired movement direction in world space
-        Vector3 direction = (camRight * horizontal + camForward * vertical + Vector3.up * depth).normalized;
+        Vector3 direction = (camRight * horizontal + camForward * vertical).normalized;
 
-        // Move the shark in the desired direction using physics
-        Vector3 move = transform.position + (direction * moveSpeed * Time.deltaTime);
-        rb.MovePosition(move);
+        // Translate the shark in world space, using camera's right and up for horizontal and vertical movement
+        rb.MovePosition(rb.position + direction * moveSpeed * Time.deltaTime);
 
-        // Rotate the shark to face the direction of movement using physics
-        if (direction != Vector3.zero)
+        // Flipping the shark's sprite based on the movement direction
+        if (horizontal > 0 && !facingRight)
         {
-            Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
-            Quaternion rotation = Quaternion.RotateTowards(rb.rotation, toRotation, turnSpeed * Time.deltaTime);
-            rb.MoveRotation(rotation);
+            // Rotate the shark to face right
+            transform.rotation = Quaternion.Euler(0, 270, 0);
+            facingRight = true;
+        }
+        else if (horizontal < 0 && facingRight)
+        {
+            // Rotate the shark to face left (180 degrees)
+            transform.rotation = Quaternion.Euler(0, 90, 0);
+            facingRight = false;
         }
     }
 }
