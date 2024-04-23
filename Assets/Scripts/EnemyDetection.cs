@@ -5,7 +5,7 @@ public class EnemyDetection : MonoBehaviour
     public float detectionRange = 10f;
     public float fieldOfViewAngle = 45f; // This is half of the actual FOV.
     public LayerMask detectionLayer;
-    public float chaseSpeed = 5f;
+    public float chaseSpeed = 40f;
     public Material normalMaterial; // Assign the normal shark material in the Inspector.
     public Material alertMaterial; // Assign the alert (red) material in the Inspector.
 
@@ -43,7 +43,7 @@ public class EnemyDetection : MonoBehaviour
             // Calculate the distance to the target
             float distanceToTarget = Vector3.Distance(transform.position, target.position);
             // Check if the target has escaped
-            if (distanceToTarget > detectionRange * 2)
+            if (distanceToTarget > detectionRange * 1.2)
             {
                 LoseTarget();
             }
