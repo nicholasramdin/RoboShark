@@ -40,14 +40,16 @@ public class RobotSharkController : MonoBehaviour
         // Flipping the shark's sprite based on the movement direction
         if (horizontal > 0 && !facingRight)
         {
-            // Rotate the shark to face right
-            transform.rotation = Quaternion.Euler(0, 270, 0);
+            // Rotate the shark to face right using physics
+            Quaternion newRotation = Quaternion.Euler(0, 270, 0);
+            rb.MoveRotation(newRotation);
             facingRight = true;
         }
         else if (horizontal < 0 && facingRight)
         {
-            // Rotate the shark to face left (180 degrees)
-            transform.rotation = Quaternion.Euler(0, 90, 0);
+            // Rotate the shark to face left (180 degrees) using physics
+            Quaternion newRotation = Quaternion.Euler(0, 90, 0);
+            rb.MoveRotation(newRotation);
             facingRight = false;
         }
     }
