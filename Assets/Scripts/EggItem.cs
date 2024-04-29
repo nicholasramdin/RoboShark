@@ -1,18 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EggItem : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public int value = 5; // The value of eggs the player gets per collection
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter(Collider other)
     {
-        
+        RobotSharkController player = other.GetComponent<RobotSharkController>();
+        if (player != null)
+        {
+            // Call the method to collect eggs, pass in the value
+            player.CollectEggs(value);
+            // You may want to deactivate the egg object here if it should disappear on collection
+            gameObject.SetActive(false);
+        }
     }
 }

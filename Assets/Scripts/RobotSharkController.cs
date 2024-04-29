@@ -5,6 +5,9 @@ public class RobotSharkController : MonoBehaviour
     public float moveSpeed = 5.0f;
     private Rigidbody rb;
     private bool facingRight = true;
+    public int maxEggs = 5; // Maximum number of eggs the player can hold
+    private int currentEggs = 0; // Current number of eggs the player is holding
+    public int score = 0; // Player's score
 
     void Start()
     {
@@ -51,6 +54,29 @@ public class RobotSharkController : MonoBehaviour
             Quaternion newRotation = Quaternion.Euler(0, 90, 0);
             rb.MoveRotation(newRotation);
             facingRight = false;
+        }
+    }
+    public void CollectEggs(int value)
+    {
+        if (currentEggs < maxEggs)
+        {
+            currentEggs += value;
+            if (currentEggs > maxEggs)
+            {
+                currentEggs = maxEggs;
+            }
+            Debug.Log("Eggs collected: " + currentEggs);
+        }
+    }
+
+    // Call this method when the player deposits eggs
+    public void DepositEggs()
+    {
+        if (currentEggs > 0)
+        {
+            score += currentEggs; // Add to the score
+            currentEggs = 0; // Reset the egg count
+            Debug.Log("Score: " + score);
         }
     }
 }
