@@ -1,45 +1,51 @@
 using UnityEngine;
+using TMPro; // Include this for using TextMeshPro elements
 
 public class RobotSharkController : MonoBehaviour
 {
     public float moveSpeed = 5.0f;
     private Rigidbody rb;
     private bool facingRight = true;
+
     public int maxEggs = 5; // The maximum number of eggs the player can carry
     private int currentEggs = 0; // The current number of eggs the player is carrying
     public int score = 0; // The player's current score
+
+    // UI elements
+    public TextMeshProUGUI scoreText; // Assign in inspector
+    public TextMeshProUGUI eggCountText; // Assign in inspector
+    public TextMeshProUGUI promptText; // Assign in inspector
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezePositionZ;
         rb.useGravity = false;
+        UpdateUI(); // Initial UI update to set the texts properly
     }
 
     void Update()
     {
-        // Capture the directions relative to the camera's orientation
-        Transform camTransform = Camera.main.transform;
+        HandleMovement();
+    }
 
+    private void HandleMovement()
+    {
+        Transform camTransform = Camera.main.transform;
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        // Calculate the movement direction relative to camera's orientation
         Vector3 camRight = camTransform.right;
-        Vector3 camForward = camTransform.up; // Using up vector to move in the camera's up/down direction
+        Vector3 camForward = camTransform.up;
 
         camRight.z = 0;
         camForward.z = 0;
         camRight.Normalize();
         camForward.Normalize();
 
-        // Calculate the desired movement direction in world space
         Vector3 direction = (camRight * horizontal + camForward * vertical).normalized;
-
-        // Translate the shark in world space, using camera's right and up for horizontal and vertical movement
         rb.MovePosition(rb.position + direction * moveSpeed * Time.deltaTime);
 
-        // Flipping the shark's sprite based on the movement direction
         if (horizontal > 0 && !facingRight)
         {
             rb.MoveRotation(Quaternion.Euler(0, 270, 0));
@@ -57,12 +63,12 @@ public class RobotSharkController : MonoBehaviour
         if (currentEggs + amount <= maxEggs)
         {
             currentEggs += amount;
-            Debug.Log("Eggs collected. Current eggs: " + currentEggs);
-            return true; // Eggs were successfully collected
+            UpdateUI();
+            return true;
         }
         else
         {
-            Debug.Log("Cannot collect more eggs. Max capacity reached.");
+            UpdateUI();
             return false;
         }
     }
@@ -71,14 +77,29 @@ public class RobotSharkController : MonoBehaviour
     {
         if (currentEggs > 0)
         {
-            score += currentEggs; // Add to the score based on the number of eggs
-            currentEggs = 0; // Reset the count of carried eggs
-            Debug.Log("Eggs deposited. Score: " + score);
+            score += currentEggs;
+            currentEggs = 0;
+            UpdateUI();
         }
     }
 
     public int GetCurrentEggs()
     {
         return currentEggs;
+    }
+
+    private void UpdateUI()
+    {
+        scoreText.text = "Score: " + score;
+        eggCountText.text = "Eggs: " + currentEggs + "/" + maxEggs;
+
+        if (currentEggs >= maxEggs)
+        {
+            promptText.text = "Max capacity reached. Go to deposit point.";
+        }
+        else
+        {
+            promptText.text = ""; // Clear the prompt when not needed
+        }
     }
 }
