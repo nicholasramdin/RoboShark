@@ -5,10 +5,10 @@ public class DepositPoint : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         RobotSharkController player = other.GetComponent<RobotSharkController>();
-        if (player != null)
+        if (player != null && player.GetCurrentEggs() > 0) // Ensure player has eggs to deposit
         {
-            // Call the deposit method from the player script
             player.DepositEggs();
         }
     }
 }
+

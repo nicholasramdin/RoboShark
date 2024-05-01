@@ -7,12 +7,23 @@ public class EggItem : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         RobotSharkController player = other.GetComponent<RobotSharkController>();
+
         if (player != null)
         {
-            // Call the method to collect eggs, pass in the value
-            player.CollectEggs(value);
-            // You may want to deactivate the egg object here if it should disappear on collection
-            gameObject.SetActive(false);
+            // Attempt to collect eggs. If the player is at max capacity, the method will return false.
+            bool collected = player.CollectEggs(value);
+
+            // Only deactivate the egg object if collected
+            if (collected)
+            {
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                // Provide feedback to the player that they can't collect more eggs
+                // This could be a UI message, a sound, etc.
+                Debug.Log("You can't carry more eggs! Go to the deposit point.");
+            }
         }
     }
 }

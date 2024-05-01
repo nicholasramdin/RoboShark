@@ -5,9 +5,9 @@ public class RobotSharkController : MonoBehaviour
     public float moveSpeed = 5.0f;
     private Rigidbody rb;
     private bool facingRight = true;
-    public int maxEggs = 5; // Maximum number of eggs the player can hold
-    private int currentEggs = 0; // Current number of eggs the player is holding
-    public int score = 0; // Player's score
+    public int maxEggs = 5; // The maximum number of eggs the player can carry
+    private int currentEggs = 0; // The current number of eggs the player is carrying
+    public int score = 0; // The player's current score
 
     void Start()
     {
@@ -28,7 +28,6 @@ public class RobotSharkController : MonoBehaviour
         Vector3 camRight = camTransform.right;
         Vector3 camForward = camTransform.up; // Using up vector to move in the camera's up/down direction
 
-        // Remove any influence from the camera's vertical (z-axis) tilt
         camRight.z = 0;
         camForward.z = 0;
         camRight.Normalize();
@@ -43,40 +42,43 @@ public class RobotSharkController : MonoBehaviour
         // Flipping the shark's sprite based on the movement direction
         if (horizontal > 0 && !facingRight)
         {
-            // Rotate the shark to face right using physics
-            Quaternion newRotation = Quaternion.Euler(0, 270, 0);
-            rb.MoveRotation(newRotation);
+            rb.MoveRotation(Quaternion.Euler(0, 270, 0));
             facingRight = true;
         }
         else if (horizontal < 0 && facingRight)
         {
-            // Rotate the shark to face left (180 degrees) using physics
-            Quaternion newRotation = Quaternion.Euler(0, 90, 0);
-            rb.MoveRotation(newRotation);
+            rb.MoveRotation(Quaternion.Euler(0, 90, 0));
             facingRight = false;
         }
     }
-    public void CollectEggs(int value)
+
+    public bool CollectEggs(int amount)
     {
-        if (currentEggs < maxEggs)
+        if (currentEggs + amount <= maxEggs)
         {
-            currentEggs += value;
-            if (currentEggs > maxEggs)
-            {
-                currentEggs = maxEggs;
-            }
-            Debug.Log("Eggs collected: " + currentEggs);
+            currentEggs += amount;
+            Debug.Log("Eggs collected. Current eggs: " + currentEggs);
+            return true; // Eggs were successfully collected
+        }
+        else
+        {
+            Debug.Log("Cannot collect more eggs. Max capacity reached.");
+            return false;
         }
     }
 
-    // Call this method when the player deposits eggs
     public void DepositEggs()
     {
         if (currentEggs > 0)
         {
-            score += currentEggs; // Add to the score
-            currentEggs = 0; // Reset the egg count
-            Debug.Log("Score: " + score);
+            score += currentEggs; // Add to the score based on the number of eggs
+            currentEggs = 0; // Reset the count of carried eggs
+            Debug.Log("Eggs deposited. Score: " + score);
         }
+    }
+
+    public int GetCurrentEggs()
+    {
+        return currentEggs;
     }
 }
