@@ -5,41 +5,33 @@ public class BatterySystem : MonoBehaviour
 {
     public float batteryLife = 100f;
     public float drainRate = 1f;
-    public Image batteryBar;  // Drag the UI Image component here in the Inspector
+    public Image batteryBarFill;  // Assign the child Image here in the inspector
 
     private void Update()
     {
         if (batteryLife > 0)
         {
-            batteryLife -= drainRate * Time.deltaTime; // Decrease battery life
+            batteryLife -= drainRate * Time.deltaTime;
             UpdateBatteryUI();
-            UpdateBatteryColor(); // Update the color based on the new battery life
         }
     }
 
     private void UpdateBatteryUI()
     {
-        if (batteryBar != null)
+        if (batteryBarFill != null)
         {
-            batteryBar.fillAmount = batteryLife / 100f; // Update the fill amount
+            batteryBarFill.fillAmount = batteryLife / 100f;
+            UpdateBatteryColor();
         }
     }
 
-    // Method to update the color of the battery bar based on current battery level
     private void UpdateBatteryColor()
     {
-        // Define color based on battery percentage
         if (batteryLife > 70)
-        {
-            batteryBar.color = Color.green; // Green for 70% and above
-        }
+            batteryBarFill.color = Color.green;
         else if (batteryLife > 30)
-        {
-            batteryBar.color = new Color(1, 0.65f, 0, 1); // Orange for 30% to 69%
-        }
+            batteryBarFill.color = Color.yellow;
         else
-        {
-            batteryBar.color = Color.red; // Red for below 30%
-        }
+            batteryBarFill.color = Color.red;
     }
 }
