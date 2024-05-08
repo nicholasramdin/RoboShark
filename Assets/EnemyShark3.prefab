@@ -150,7 +150,7 @@ MonoBehaviour:
   detectionLayer:
     serializedVersion: 2
     m_Bits: 256
-  chaseSpeed: 45
+  chaseSpeed: 39
   normalMaterial: {fileID: 2100000, guid: 803313c9a99b343998544d3abd930e16, type: 2}
   alertMaterial: {fileID: 2100000, guid: da8e7c5191c6740019f3a7b0e2c77893, type: 2}
 --- !u!33 &8907426400517770037

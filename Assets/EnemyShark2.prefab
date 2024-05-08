@@ -62,7 +62,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: 3b698fd586e93274e99fec96cb6836b4, type: 3}
       propertyPath: m_Name
-      value: EnemyShark3 1
+      value: EnemyShark2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -150,7 +150,7 @@ MonoBehaviour:
   detectionLayer:
     serializedVersion: 2
     m_Bits: 256
-  chaseSpeed: 45
+  chaseSpeed: 39
   normalMaterial: {fileID: 2100000, guid: 803313c9a99b343998544d3abd930e16, type: 2}
   alertMaterial: {fileID: 2100000, guid: da8e7c5191c6740019f3a7b0e2c77893, type: 2}
 --- !u!33 &8907426400517770037
