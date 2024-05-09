@@ -6,6 +6,12 @@ public class BatterySystem : MonoBehaviour
     public float batteryLife = 100f;
     public float drainRate = 1f;
     public Image batteryBarFill;  // Assign the child Image here in the inspector
+    public GameObject loseScreenPanel;  // Assign the lose screen panel in the inspector
+
+    private void Start()
+    {
+        loseScreenPanel.SetActive(false);  // Ensure the lose screen is hidden initially
+    }
 
     private void Update()
     {
@@ -13,6 +19,10 @@ public class BatterySystem : MonoBehaviour
         {
             batteryLife -= drainRate * Time.deltaTime;
             UpdateBatteryUI();
+        }
+        else
+        {
+            TriggerLoseCondition();
         }
     }
 
@@ -33,5 +43,11 @@ public class BatterySystem : MonoBehaviour
             batteryBarFill.color = Color.yellow;
         else
             batteryBarFill.color = Color.red;
+    }
+
+    private void TriggerLoseCondition()
+    {
+        loseScreenPanel.SetActive(true);  // Show the lose screen
+        Time.timeScale = 0;  // Freeze the game
     }
 }

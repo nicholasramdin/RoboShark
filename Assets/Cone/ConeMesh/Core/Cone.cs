@@ -43,6 +43,11 @@ namespace KevinCastejon.ConeMesh
         private MeshRenderer _meshRenderer;
         private MeshCollider _meshCollider;
 
+        private void Start()
+        {
+            GenerateCone();  // Ensure the cone is generated when the GameObject starts
+        }
+
         public bool PivotAtTop { get => _pivotAtTop; set { _pivotAtTop = value; GenerateCone(); } }
         public Material Material { get => _material; set { _material = value; _meshRenderer = _meshRenderer ? _meshRenderer : gameObject.GetComponent<MeshRenderer>(); _meshRenderer.material = _material; } }
         public int ConeSubdivisions { get => _coneSides; set { _coneSides = value; GenerateCone(); } }

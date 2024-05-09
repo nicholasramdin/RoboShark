@@ -3,7 +3,9 @@ guid: cca5a1f737516bc4d8e48e18b31caaf7
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - batteryBarFill: {fileID: 6849265159884216502, guid: f1f6f6b34cea39b42899f8558181bd2e, type: 3}
+  - loseScreenPanel: {fileID: 9066977969512834124, guid: 13dafe739fb095d478ad7e7554267247, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
