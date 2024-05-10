@@ -16185,6 +16185,10 @@ PrefabInstance:
       value: loseScreenPanel
       objectReference: {fileID: 0}
     - target: {fileID: 9066977969512834124, guid: 13dafe739fb095d478ad7e7554267247, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9066977969512834124, guid: 13dafe739fb095d478ad7e7554267247, type: 3}
       propertyPath: m_TagString
       value: Untagged
       objectReference: {fileID: 0}
@@ -16295,6 +16299,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1164331606}
+  - {fileID: 1917224459}
   - {fileID: 739014410}
   - {fileID: 5188788729899930718}
   - {fileID: 1723644218}
@@ -16309,7 +16314,6 @@ SceneRoots:
   - {fileID: 1046158099}
   - {fileID: 294649958}
   - {fileID: 394931129}
-  - {fileID: 1917224459}
   - {fileID: 1564210593}
   - {fileID: 1279211618}
   - {fileID: 1651428198}

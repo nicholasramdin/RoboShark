@@ -1,5 +1,5 @@
 using UnityEngine;
-using TMPro; // Include this for using TextMeshPro elements
+using TMPro; //  using TextMeshPro elements
 
 public class RobotSharkController : MonoBehaviour
 {

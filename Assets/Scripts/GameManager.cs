@@ -1,13 +1,14 @@
 using UnityEngine;
+using UnityEngine.UI; // Needed for accessing Button components
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance; // Singleton pattern
-    public BatterySystem batterySystem; // Assign this in the Inspector
+    public BatterySystem batterySystem; // Assign in inspector
     private List<GameObject> eggs = new List<GameObject>(); // List to store all eggs
-    public GameObject loseScreenPanel; // Make sure this is assigned in the inspector
+    public GameObject loseScreenPanel; // Assign in inspector
 
     void Awake()
     {
@@ -31,11 +32,38 @@ public class GameManager : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // Re-find and set the loseScreenPanel if necessary, especially if it's a scene-specific UI element
+        loseScreenPanel = GameObject.Find("loseScreenPanel");
         if (loseScreenPanel == null)
         {
-            loseScreenPanel = GameObject.Find("loseScreenPanel");
+            Debug.LogError("LoseScreenPanel not found after scene load");
         }
-        Time.timeScale = 1;
+        else
+        {
+            SetupButtons();
+            loseScreenPanel.SetActive(false); // Ensure it's initially hidden
+        }
+        Time.timeScale = 1; // Reset time scale on scene load to ensure game isn't frozen
+        Debug.Log("Scene loaded, time scale reset.");
+    }
+
+    void SetupButtons()
+    {
+        // Set up buttons again after the scene is loaded
+        Button restartButton = loseScreenPanel.transform.Find("RestartButton").GetComponent<Button>();
+        Button exitButton = loseScreenPanel.transform.Find("ExitButton").GetComponent<Button>();
+
+        if (restartButton != null && exitButton != null)
+        {
+            restartButton.onClick.RemoveAllListeners();
+            restartButton.onClick.AddListener(RestartGame);
+
+            exitButton.onClick.RemoveAllListeners();
+            exitButton.onClick.AddListener(ExitGame);
+        }
+        else
+        {
+            Debug.LogError("One or more buttons are not found in the LoseScreenPanel.");
+        }
     }
 
     public void RegisterEgg(GameObject egg)
@@ -69,6 +97,7 @@ public class GameManager : MonoBehaviour
         {
             loseScreenPanel.SetActive(true); // Show the lose screen
             Time.timeScale = 0; // Freeze the game
+            Debug.Log("Game Over, screen frozen.");
         }
         else
         {
@@ -78,12 +107,15 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
-        Time.timeScale = 1; // Ensure the game is not frozen
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // Reload the current scene
+        Debug.Log("Restarting Game");
+        Time.timeScale = 1; // Reset the time scale to 1 to ensure the game isn't frozen
+        SceneManager.LoadScene("mainScene"); // Reload the main scene directly
+        Debug.Log("Game restarted, main scene loaded.");
     }
 
     public void ExitGame()
     {
+        Debug.Log("Attempting to exit game...");
         Application.Quit(); // Exit the game
     }
 }

@@ -11,7 +11,7 @@ public class DepositPoint : MonoBehaviour
         {
             player.DepositEggs();
             spawner.SpawnEnemy();  // Call to spawn an enemy
-            GameManager.Instance.ResetEggs(); // Reset eggs in your game logic
+            GameManager.Instance.ResetEggs(); // Reset eggs in game logic
         }
         GameManager.Instance.ReplenishBattery(); // Replenish battery on player contact
     }

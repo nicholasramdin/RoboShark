@@ -8,14 +8,14 @@ public class CameraFollow : MonoBehaviour
 
     void Start()
     {
-        // Initialize the offset at start if you want to auto-detect it based on initial positions
+        // Initialize the offset at start if to auto-detect it based on initial positions
         offset = transform.position - target.position;
     }
 
     void LateUpdate()
     {
         Vector3 desiredPosition = target.position + offset;
-        // You can limit the camera's follow feature to only vertical movement by setting x (and z if needed) to the camera's current position
+        // can limit the camera's follow feature to only vertical movement by setting x (and z if needed) to the camera's current position
         desiredPosition.x = transform.position.x;
         desiredPosition.z = transform.position.z; // Keep the camera's depth fixed
 
