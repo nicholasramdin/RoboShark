@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance; // Singleton pattern
+    public BatterySystem batterySystem; // Assign this in the Inspector
     private List<GameObject> eggs = new List<GameObject>(); // List to store all eggs
     public GameObject loseScreenPanel; // Make sure this is assigned in the inspector
 
@@ -49,6 +50,15 @@ public class GameManager : MonoBehaviour
         foreach (GameObject egg in eggs)
         {
             if (egg != null) egg.SetActive(true); // Reactivate all eggs
+        }
+    }
+
+    // Called by DepositPoint when the player contacts it
+    public void ReplenishBattery()
+    {
+        if (batterySystem != null)
+        {
+            batterySystem.ReplenishBatteryToFull();
         }
     }
 

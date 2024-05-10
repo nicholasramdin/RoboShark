@@ -4530,6 +4530,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   batteryLife: 100
   drainRate: 1
+  maxBattery: 100
   batteryBarFill: {fileID: 947115801}
 --- !u!114 &774838655
 MonoBehaviour:
@@ -6811,6 +6812,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   batteryLife: 100
   drainRate: 1
+  maxBattery: 100
   batteryBarFill: {fileID: 6849265159884216502, guid: f1f6f6b34cea39b42899f8558181bd2e, type: 3}
 --- !u!1 &1250145424 stripped
 GameObject:
@@ -13012,7 +13014,7 @@ GameObject:
   - component: {fileID: 1502239222}
   m_Layer: 5
   m_Name: LoseScreenCanvas
-  m_TagString: LoseScreenPanel
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13797,6 +13799,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af56d931f67671043933654e72d03303, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  batterySystem: {fileID: 774838654}
   loseScreenPanel: {fileID: 1921021168}
 --- !u!4 &1651428198
 Transform:

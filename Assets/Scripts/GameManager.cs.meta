@@ -3,7 +3,8 @@ guid: af56d931f67671043933654e72d03303
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - loseScreenPanel: {fileID: 9066977969512834124, guid: 13dafe739fb095d478ad7e7554267247, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

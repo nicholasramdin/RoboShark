@@ -5,6 +5,7 @@ public class BatterySystem : MonoBehaviour
 {
     public float batteryLife = 100f;
     public float drainRate = 1f;
+    public float maxBattery = 100f; // Define the maximum battery life
     public Image batteryBarFill;
 
     private void Update()
@@ -28,6 +29,13 @@ public class BatterySystem : MonoBehaviour
             UpdateBatteryColor();
         }
     }
+
+    public void ReplenishBatteryToFull()
+    {
+        batteryLife = maxBattery;
+        UpdateBatteryUI();
+    }
+
 
     private void UpdateBatteryColor()
     {
