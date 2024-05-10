@@ -22,7 +22,7 @@ public class CameraFollow : MonoBehaviour
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
         transform.position = smoothedPosition;
 
-        // If you want the camera to always look at the player, uncomment the following line
+        // If  the camera needs to always look at the player, uncomment the following line
         //transform.LookAt(target);
     }
 }

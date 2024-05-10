@@ -1,11 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance; // Singleton pattern
-
     private List<GameObject> eggs = new List<GameObject>(); // List to store all eggs
+    public GameObject loseScreenPanel; // Make sure this is assigned in the inspector
 
     void Awake()
     {
@@ -13,10 +14,25 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
             Destroy(gameObject);
+        }
+    }
+
+    void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Re-find and set the loseScreenPanel if necessary, especially if it's a scene-specific UI element
+        if (loseScreenPanel == null)
+        {
+            loseScreenPanel = GameObject.Find("loseScreenPanel");
         }
     }
 
@@ -32,7 +48,31 @@ public class GameManager : MonoBehaviour
     {
         foreach (GameObject egg in eggs)
         {
-            egg.SetActive(true); // Reactivate all eggs
+            if (egg != null) egg.SetActive(true); // Reactivate all eggs
         }
+    }
+
+    public void HandleGameOver()
+    {
+        if (loseScreenPanel != null)
+        {
+            loseScreenPanel.SetActive(true); // Show the lose screen
+            Time.timeScale = 0; // Freeze the game
+        }
+        else
+        {
+            Debug.LogError("LoseScreenPanel is missing");
+        }
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1; // Ensure the game is not frozen
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // Reload the current scene
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit(); // Exit the game
     }
 }

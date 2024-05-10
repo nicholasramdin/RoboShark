@@ -4531,7 +4531,6 @@ MonoBehaviour:
   batteryLife: 100
   drainRate: 1
   batteryBarFill: {fileID: 947115801}
-  loseScreenPanel: {fileID: 1921021168}
 --- !u!114 &774838655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6813,7 +6812,6 @@ MonoBehaviour:
   batteryLife: 100
   drainRate: 1
   batteryBarFill: {fileID: 6849265159884216502, guid: f1f6f6b34cea39b42899f8558181bd2e, type: 3}
-  loseScreenPanel: {fileID: 9066977969512834124, guid: 13dafe739fb095d478ad7e7554267247, type: 3}
 --- !u!1 &1250145424 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: bd15c2795eb45de42a6dbf3109322c5d, type: 3}
@@ -12503,7 +12501,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a85c23ecb4f18e45a856a188b8c53a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loseScreenPanel: {fileID: 1921021168}
 --- !u!4 &1337533455
 Transform:
   m_ObjectHideFlags: 0
@@ -13015,7 +13012,7 @@ GameObject:
   - component: {fileID: 1502239222}
   m_Layer: 5
   m_Name: LoseScreenCanvas
-  m_TagString: Untagged
+  m_TagString: LoseScreenPanel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13800,6 +13797,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af56d931f67671043933654e72d03303, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loseScreenPanel: {fileID: 1921021168}
 --- !u!4 &1651428198
 Transform:
   m_ObjectHideFlags: 0
@@ -16034,11 +16032,27 @@ PrefabInstance:
     - target: {fileID: 600731882335111184, guid: 13dafe739fb095d478ad7e7554267247, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1337533454}
+      objectReference: {fileID: 1651428197}
+    - target: {fileID: 600731882335111184, guid: 13dafe739fb095d478ad7e7554267247, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: RestartGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 600731882335111184, guid: 13dafe739fb095d478ad7e7554267247, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GameManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 3098124931040878880, guid: 13dafe739fb095d478ad7e7554267247, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1337533454}
+      objectReference: {fileID: 1651428197}
+    - target: {fileID: 3098124931040878880, guid: 13dafe739fb095d478ad7e7554267247, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ExitGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 3098124931040878880, guid: 13dafe739fb095d478ad7e7554267247, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GameManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 5540253517169852188, guid: 13dafe739fb095d478ad7e7554267247, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -16121,7 +16135,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9066977969512834124, guid: 13dafe739fb095d478ad7e7554267247, type: 3}
       propertyPath: m_Name
-      value: Panel
+      value: loseScreenPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 9066977969512834124, guid: 13dafe739fb095d478ad7e7554267247, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
