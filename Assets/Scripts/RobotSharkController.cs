@@ -11,6 +11,9 @@ public class RobotSharkController : MonoBehaviour
     private int currentEggs = 0; // The current number of eggs the player is carrying
     public int score = 0; // The player's current score
 
+    public AudioSource pickupAudioSource; // Assign in Inspector
+
+
     // UI elements
     public TextMeshProUGUI scoreText; // Assign in inspector
     public TextMeshProUGUI eggCountText; // Assign in inspector
@@ -63,6 +66,7 @@ public class RobotSharkController : MonoBehaviour
         if (currentEggs + amount <= maxEggs)
         {
             currentEggs += amount;
+            
             UpdateUI();
             return true;
         }
