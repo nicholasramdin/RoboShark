@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
         {
             loseScreenPanel = GameObject.Find("loseScreenPanel");
         }
+        Time.timeScale = 1;
     }
 
     public void RegisterEgg(GameObject egg)
