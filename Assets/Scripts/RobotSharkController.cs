@@ -66,7 +66,7 @@ public class RobotSharkController : MonoBehaviour
         if (currentEggs + amount <= maxEggs)
         {
             currentEggs += amount;
-            
+            pickupAudioSource.Play();  // Play sound
             UpdateUI();
             return true;
         }
